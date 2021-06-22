@@ -11,11 +11,11 @@ examples/api_hoth/hoth/logs/*.log
 css/*
 
 #testbox
+tests/
+tests/tests/
 tests/testbox
-
-tests/di1
-tests/Hoth
-tests/BugLogHQ
+di1/
+hoth/
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm

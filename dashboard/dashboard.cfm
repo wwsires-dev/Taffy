@@ -1,3 +1,5 @@
+<cfsetting enablecfoutputonly=true />
+<cfoutput>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -13,14 +15,16 @@
 		window.taffy = { resources: {} };
 	</script>
 
-	<div class="container">
+	<div class="container" style="margin:auto; max-width:90%;">
 
 		<div class="masthead">
-			<button id="docs" class="btn btn-success" onclick="window.location.href = '<cfoutput>#CGI.SCRIPT_NAME#</cfoutput>?docs'">Documentation</button>
+			<button id="docs" class="btn btn-success" onclick="window.location.href = '#CGI.SCRIPT_NAME#?docs'">Documentation</button>
 			<button id="reload" class="btn btn-info">Reload API Cache</button>
-			<button data-toggle="modal" data-target="#config" class="btn btn-default">Config</button>
-			<h1>API Dashboard</h1>
-			<span class="ver text-muted">Taffy <cfoutput>#application._taffy.version#</cfoutput></span>
+			<button data-toggle="modal" data-target="##config" class="btn btn-default">Config</button>
+			<h1>#UCase( Application.Applicationname )# Dashboard</h1>
+			<span class="ver text-muted">API Version #Application.appVersion#</span>
+			<br/>
+			<span class="ver text-muted">Taffy Version #application._taffy.version#</span>
 		</div>
 
 		<!--- config modal --->
@@ -32,43 +36,42 @@
 						<h4 class="modal-title" id="frameworkConfig">Framework Configuration</h4>
 					</div>
 					<div class="modal-body" style="padding:0">
-						<cfoutput>
 							<div class="table-responsive">
 								<table class="table table-striped" style="margin-bottom:0">
 									<tr>
 										<td><strong>Reload on every request:</strong></td>
-										<td><a class="label label-default" href="<cfoutput>#getDocUrl('reloadOnEveryRequest')#</cfoutput>">?</a>
+										<td><a class="label label-default" href="#getDocUrl('reloadOnEveryRequest')#">?</a>
 										#yesNoFormat(application._taffy.settings.reloadOnEveryRequest)#</td>
 									</tr>
 									<tr>
 										<td><strong>Return Exceptions as JSON:</strong></td>
-										<td><a class="label label-default" href="<cfoutput>#getDocUrl('returnExceptionsAsJson')#</cfoutput>">?</a>
+										<td><a class="label label-default" href="#getDocUrl('returnExceptionsAsJson')#">?</a>
 										#yesNoFormat(application._taffy.settings.returnExceptionsAsJson)#</td>
 									</tr>
 									<tr>
 										<td><strong>CORS:</strong></td>
-										<td><a class="label label-default" href="<cfoutput>#getDocUrl('allowCrossDomain')#</cfoutput>">?</a>
+										<td><a class="label label-default" href="#getDocUrl('allowCrossDomain')#">?</a>
 										<cfif application._taffy.settings.allowCrossDomain EQ 'false'>No<cfelse>Yes</cfif></td>
 									</tr>
 									<tr>
 										<td><strong>E-Tags:</strong></td>
-										<td><a class="label label-default" href="<cfoutput>#getDocUrl('useEtags')#</cfoutput>">?</a>
+										<td><a class="label label-default" href="#getDocUrl('useEtags')#">?</a>
 										#yesNoFormat(application._taffy.settings.useEtags)#</td>
 									</tr>
 									<tr>
 										<td><strong>JSONP:</strong></td>
-										<td><a class="label label-default" href="<cfoutput>#getDocUrl('jsonp')#</cfoutput>">?</a>
+										<td><a class="label label-default" href="#getDocUrl('jsonp')#">?</a>
 										<cfif application._taffy.settings.jsonp eq false>No<cfelse>?<strong>#application._taffy.settings.jsonp#=</strong>...
 										</cfif></td>
 									</tr>
 									<tr>
 										<td><strong>Endpoint URL Param:</strong></td>
-										<td><a class="label label-default" href="<cfoutput>#getDocUrl('endpointURLParam')#</cfoutput>">?</a>
+										<td><a class="label label-default" href="#getDocUrl('endpointURLParam')#">?</a>
 										#application._taffy.settings.endpointURLParam#</td>
 									</tr>
 									<tr>
 										<td><strong>Serializer:</strong></td>
-										<td><a class="label label-default" href="<cfoutput>#getDocUrl('serializer')#</cfoutput>">?</a>
+										<td><a class="label label-default" href="#getDocUrl('serializer')#">?</a>
 										#application._taffy.settings.serializer#</td>
 									</tr>
 									<tr>
@@ -81,7 +84,7 @@
 									</tr>
 									<tr>
 										<td><strong>Global Headers:</strong></td>
-										<td><a class="label label-default" href="<cfoutput>#getDocUrl('globalHeaders')#</cfoutput>">?</a>
+										<td><a class="label label-default" href="#getDocUrl('globalHeaders')#">?</a>
 										<dl>
 											<cfloop list="#structKeyList(application._taffy.settings.globalHeaders)#" index="local.h">
 												<dt>#local.h#</dt>
@@ -94,12 +97,12 @@
 									</tr>
 									<tr>
 										<td><strong>Exception Log Adapter:</strong></td>
-										<td><a class="label label-default" href="<cfoutput>#getDocUrl('exceptionLogAdapter')#</cfoutput>">?</a>
+										<td><a class="label label-default" href="#getDocUrl('exceptionLogAdapter')#">?</a>
 										#application._taffy.settings.exceptionLogAdapter#</td>
 									</tr>
 									<tr>
 										<td><strong>Exception Log Adapter Config:</strong></td>
-										<td><a class="label label-default" href="<cfoutput>#getDocUrl('exceptionLogAdapterConfig')#</cfoutput>">?</a>
+										<td><a class="label label-default" href="#getDocUrl('exceptionLogAdapterConfig')#">?</a>
 										<cfif isSimpleValue(application._taffy.settings.exceptionLogAdapterConfig)>
 											#application._taffy.settings.exceptionLogAdapterConfig#
 										<cfelse>
@@ -121,8 +124,6 @@
 									</tr>
 								</table>
 							</div>
-
-						</cfoutput>
 						<div class="clearfix"></div>
 					</div>
 				</div><!-- /.modal-content -->
@@ -134,7 +135,7 @@
 			<cfif structKeyExists(application._taffy, "status")
 					and structKeyExists(application._taffy.status, "skippedResources")
 					and arrayLen(application._taffy.status.skippedResources) gt 0>
-				<cfoutput>
+
 					<cfloop from="1" to="#arrayLen(application._taffy.status.skippedResources)#" index="local.i">
 
 						<cfset local.err = application._taffy.status.skippedResources[local.i] />
@@ -146,11 +147,11 @@
 
 						<div class="alert alert-warning">
 							<cfif local.errorCode EQ "taffy.resources.DuplicateUriPattern">
-								<strong class="label label-warning"><cfoutput>#local.err.resource#</cfoutput></strong> contains a conflicting URI.
+								<strong class="label label-warning">#local.err.resource#</strong> contains a conflicting URI.
 							<cfelseif local.errorcode EQ "taffy.resources.URIDoesntBeginWithForwardSlash">
-								<strong class="label label-warning"><cfoutput>#local.err.resource#</cfoutput></strong> should have a URI that begins with a forward slash.
+								<strong class="label label-warning">#local.err.resource#</strong> should have a URI that begins with a forward slash.
 							<cfelse>
-								<strong class="label label-warning"><cfoutput>#local.err.resource#</cfoutput></strong> contains a syntax error.
+								<strong class="label label-warning">#local.err.resource#</strong> contains a syntax error.
 								<cfif structKeyExists(local.err.exception, 'tagContext')>
 									<strong>Error on line #local.err.exception.tagcontext[1].line#:</strong>
 								</cfif>
@@ -170,9 +171,9 @@
 							Reload the API Cache after resolving this error.
 						</div>
 					</cfloop>
-				</cfoutput>
+
 			</cfif>
-		</div><!-- /#alerts -->
+		</div><!-- /##alerts -->
 
 		<div class="row" id="resources">
 			<h3>
@@ -190,253 +191,251 @@
 						return compare( item1.bean, item2.bean );
 					} );
 				</cfscript>
-				<cfoutput>
-					<cfloop from="1" to="#arrayLen(application._taffy.uriMatchOrder)#" index="local.resource">
-						<cfset local.currentResource = application._taffy.endpoints[ theOrder[local.resource].uri ] />
-						<cfset local.resourceHTTPID = rereplace(local.currentResource.beanName & "_" & hash(local.currentResource.srcURI), "[^0-9a-zA-Z_]", "_", "all") />
-						<cfset local.md = getMetaData(application._taffy.factory.getBean(local.currentResource.beanName)) />
-						<cfif structKeyExists(local.md, "taffy_dashboard_hide") OR structKeyExists(local.md, "taffy:dashboard:hide")>
-							<cfscript>continue;</cfscript>
-						</cfif>
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h4 class="panel-title">
-									<a href="###local.resourceHTTPID#" class="accordion-toggle" data-toggle="collapse" data-parent="##resourcesAccordion">
-										<cfif structKeyExists(local.md, "taffy:dashboard:name")>
-											#local.md['taffy:dashboard:name']#
-										<cfelseif structKeyExists(local.md, "taffy_dashboard_name")>
-											#local.md['taffy_dashboard_name']#
-										<cfelseif structKeyExists(local.md, "taffy:docs:name")>
-											#local.md['taffy:docs:name']#
-										<cfelseif structKeyExists(local.md, "taffy_docs_name")>
-											#local.md['taffy_docs_name']#
-										<cfelse>
-											#local.currentResource.beanName#
+				<cfloop from="1" to="#arrayLen(application._taffy.uriMatchOrder)#" index="local.resource">
+					<cfset local.currentResource = application._taffy.endpoints[ theOrder[local.resource].uri ] />
+					<cfset local.resourceHTTPID = rereplace(local.currentResource.beanName & "_" & hash(local.currentResource.srcURI), "[^0-9a-zA-Z_]", "_", "all") />
+					<cfset local.md = getMetaData(application._taffy.factory.getBean(local.currentResource.beanName)) />
+					<cfif structKeyExists(local.md, "taffy_dashboard_hide") OR structKeyExists(local.md, "taffy:dashboard:hide")>
+						<cfscript>continue;</cfscript>
+					</cfif>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a href="###local.resourceHTTPID#" class="accordion-toggle" data-toggle="collapse" data-parent="##resourcesAccordion">
+									<cfif structKeyExists(local.md, "taffy:dashboard:name")>
+										#local.md['taffy:dashboard:name']#
+									<cfelseif structKeyExists(local.md, "taffy_dashboard_name")>
+										#local.md['taffy_dashboard_name']#
+									<cfelseif structKeyExists(local.md, "taffy:docs:name")>
+										#local.md['taffy:docs:name']#
+									<cfelseif structKeyExists(local.md, "taffy_docs_name")>
+										#local.md['taffy_docs_name']#
+									<cfelse>
+										#local.currentResource.beanName#
+									</cfif>
+								</a>
+								<cfloop list="DELETE|warning,PATCH|warning,PUT|warning,POST|danger,GET|primary" index="local.verb">
+									<cfif structKeyExists(local.currentResource.methods, listFirst(local.verb,'|'))>
+										<span class="verb label label-success">#ucase(listFirst(local.verb,'|'))#</span>
+									<cfelse>
+										<span class="verb label label-default">#ucase(listFirst(local.verb,'|'))#</span>
+									</cfif>
+								</cfloop>
+								<code style="float:right; margin-top: -15px; display: inline-block;">#local.currentResource.srcUri#</code>
+							</h4>
+						</div>
+						<div class="panel-collapse collapse" id="#local.resourceHTTPID#">
+							<div class="panel-body resourceWrapper">
+								<div class="col-md-8 runner">
+									<div class="well resource" data-uri="#local.currentResource.srcUri#" data-bean-name="#local.resourceHTTPID#">
+										<button class="btn btn-primary submitRequest">Send</button>
+										<button class="btn btn-success resetRequest">Reset</button>
+										<button class="btn btn-default showDocs">Show Docs</button>
+										<select class="form-control input-sm reqMethod">
+											<cfloop list="GET,POST,PUT,PATCH,DELETE" index="local.verb">
+												<cfif structKeyExists(local.currentResource.methods, local.verb)>
+													<option value="#local.verb#">#local.verb#</option>
+												</cfif>
+											</cfloop>
+											<cfif application._taffy.settings.allowCrossDomain NEQ 'false'>
+												<option value="OPTIONS">OPTIONS</option>
+											</cfif>
+										</select>
+										<input type="text" class="resourceUri form-control" value="#local.currentResource.srcUri#" onclick="this.select()" />
+										<div class="toggles">
+											<a class="expander" data-target="##qp_#local.resourceHTTPID#">+Query Params</a>
+											&nbsp;<a class="expander" data-target="##accept_#local.resourceHTTPID#">+Accept</a>
+											&nbsp;<a class="expander" data-target="##head_#local.resourceHTTPID#">+Headers</a>
+											&nbsp;<a class="expander" data-target="##auth_#local.resourceHTTPID#">+Basic Auth</a>
+										</div>
+
+										<div class="queryParams expandable" id="qp_#local.resourceHTTPID#">
+											<h4>Query String Parameters: <span class="text-muted">(optional)</span></h4>
+											<div class="qparam row form-group">
+												<div class="col-md-4">
+													<input class="form-control input-small paramName" />
+												</div>
+												<div class="col-md-1 micro">=</div>
+												<div class="col-md-4">
+													<input class="form-control input-small paramValue" />
+												</div>
+												<div class="col-md-2">
+													<button class="btn addParam" tabindex="-1">+</button>
+												</div>
+											</div>
+										</div>
+
+										<div class="expandable" id="accept_#local.resourceHTTPID#">
+											<h4>Accept:</h4>
+											<select class="form-control input-sm reqFormat">
+												<cfloop list="#structKeyList(application._taffy.settings.mimeTypes)#" index="local.mime">
+													<option value="#local.mime#"
+														<cfif application._taffy.settings.defaultMime eq application._taffy.settings.mimeTypes[local.mime]>selected="selected"</cfif>
+													>#application._taffy.settings.mimeTypes[local.mime]#</option>
+												</cfloop>
+											</select>
+										</div>
+
+										<cfif arrayLen(local.currentResource.tokens) gt 0>
+											<div class="reqTokens">
+												<h4>URI Tokens: <span class="text-muted">(required)</span></h4>
+												<div class='tokenErrors'></div>
+												<form class="form-horizontal" onsubmit="return false;">
+													<cfloop from="1" to="#arrayLen(local.currentResource.tokens)#" index="local.token">
+														<div class="form-group row">
+															<div class="col-md-3">
+																<label class="control-label" for="token_#local.resourceHTTPID#_#local.currentResource.tokens[local.token]#">#local.currentResource.tokens[local.token]#:</label>
+															</div>
+															<div class="col-md-6">
+																<input id="token_#local.resourceHTTPID#_#local.currentResource.tokens[local.token]#" name="#local.currentResource.tokens[local.token]#" type="text" class="form-control input-sm" />
+															</div>
+														</div>
+													</cfloop>
+												</form>
+											</div>
 										</cfif>
-									</a>
-									<cfloop list="DELETE|warning,PATCH|warning,PUT|warning,POST|danger,GET|primary" index="local.verb">
-										<cfif structKeyExists(local.currentResource.methods, listFirst(local.verb,'|'))>
-											<span class="verb label label-success">#ucase(listFirst(local.verb,'|'))#</span>
-										<cfelse>
-											<span class="verb label label-default">#ucase(listFirst(local.verb,'|'))#</span>
+
+										<div class="reqHeaders expandable" id="head_#local.resourceHTTPID#">
+											<h4>Request Headers:</h4>
+											<textarea
+												rows="#listLen(structKeyList(application._taffy.settings.dashboardHeaders, '|'), '|')+1#"
+												class="form-control input-sm requestHeaders"
+												placeholder="X-MY-HEADER: VALUE"
+												><cfloop list="#structKeyList(application._taffy.settings.dashboardHeaders, '|')#" delimiters="|" index="k">#k#: #application._taffy.settings.dashboardHeaders[k]##chr(13)##chr(10)#</cfloop></textarea>
+										</div>
+
+										<div class="expandable" id="auth_#local.resourceHTTPID#">
+											<h4>Basic Auth:</h4>
+											<div class="basicAuth row">
+												<div class="col-md-6"><input type="text" name="username" class="form-control" placeholder="Username" value="" /></div>
+												<div class="col-md-6"><input type="password" name="password" class="form-control" placeholder="Password" value="" /></div>
+											</div>
+										</div>
+
+										<div class="reqBody">
+											<h4>Request Body:</h4>
+											<textarea id="#local.resourceHTTPID#_RequestBody" class="form-control input-sm" rows="5"></textarea>
+											<cfif structKeyExists(local.md,"functions")>
+												<cfset local.functions = local.md.functions />
+											<cfelse>
+												<cfset local.functions = arrayNew(1) />
+											</cfif>
+
+											<!--- only save body templates for POST & PUT --->
+											<cfloop from="1" to="#arrayLen(local.functions)#" index="local.f">
+												<cfif local.functions[local.f].name eq "POST" or local.functions[local.f].name eq "PUT" or local.functions[local.f].name eq "PATCH">
+													<cfset local.args = {} />
+													<!--- get a list of all function arguments --->
+													<cfloop from="1" to="#arrayLen(local.functions[local.f].parameters)#" index="local.parm">
+														<cfset local.paramAttributes = local.functions[local.f].parameters[local.parm]>
+														<cfif structKeyExists(local.paramAttributes, "taffy_docs_hide") OR structKeyExists(local.paramAttributes, "taffy:docs:hide") OR structKeyExists(local.paramAttributes, "taffy_dashboard_hide") OR structKeyExists(local.paramAttributes, "taffy:dashboard:hide")>
+															<cfscript>continue;</cfscript>
+														</cfif>
+														<cfif not structKeyExists(local.paramAttributes,"type")>
+															<cfset local.args[local.paramAttributes.name] = '' />
+														<cfelseif local.paramAttributes.type eq 'struct'>
+															<cfset local.args[local.paramAttributes.name] = structNew() />
+														<cfelseif local.paramAttributes.type eq 'array'>
+															<cfset local.args[local.paramAttributes.name] = arrayNew(1) />
+														<cfelseif local.paramAttributes.type eq 'numeric'>
+															<cfset local.args[local.paramAttributes.name] = 0 />
+														<cfelseif local.paramAttributes.type eq 'boolean'>
+															<cfset local.args[local.paramAttributes.name] = true />
+														<cfelse>
+															<cfset local.args[local.paramAttributes.name] = '' />
+														</cfif>
+													</cfloop>
+													<!--- omit uri tokens --->
+													<cfloop from="1" to="#arrayLen(local.currentResource.tokens)#" index="local.token">
+														<cfset structDelete(local.args, local.currentResource.tokens[local.token]) />
+													</cfloop>
+													<!--- save to page JS for runtime reference --->
+													<script>
+														taffy.resources['#local.resourceHTTPID#'] = taffy.resources['#local.resourceHTTPID#'] || {};
+														taffy.resources['#local.resourceHTTPID#']['#lcase(local.functions[local.f].name)#'] = #serializeJson(local.args)#;
+													</script>
+												</cfif>
+											</cfloop>
+										</div>
+										<div class="progress progress-striped active">
+											<div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+												<span class="sr-only">Loading...</span>
+											</div>
+										</div>
+										<div class="response">
+											<hr />
+											<h4>Response:</h4>
+											<div class="responseHeaders"></div>
+											<p class="responseTime"></p>
+											<p class="label label-default responseStatus"></p>
+											<pre><code class="responseBody"></code></pre>
+										</div>
+									</div><!-- /well (resource) -->
+								</div><!-- /col-md-8 -->
+								<div class="col-md-4 docs">
+									<div class="row"><div class="col-md-12"><button class="btn btn-default hideDocs">Hide Docs</button></div></div>
+									<strong><cfif structKeyExists(local.md, "taffy:docs:name")>
+										#lcase(local.md['taffy:docs:name'])#
+									<cfelseif structKeyExists(local.md, "taffy_docs_name")>
+										#lcase(local.md['taffy_docs_name'])#
+									<cfelse>
+										#lcase(local.currentResource.beanName)#
+									</cfif></strong><br />
+									<cfset local.metadata = getMetaData(application._taffy.factory.getBean(local.currentResource.beanName)) />
+									<cfset local.docData = getHintsFromMetadata(local.metadata) />
+									<cfif structKeyExists(local.docData, 'hint')><div class="doc">#local.docData.hint#</div><hr/></cfif>
+									<cfset local.found = { get=false, post=false, put=false, patch=false, delete=false } />
+									<cfloop from="1" to="#arrayLen(local.docData.functions)#" index="local.f">
+										<cfset local.func = local.docData.functions[local.f] />
+										<cfset local.found[local.func.name] = true />
+										<!--- skip methods that are hidden --->
+										<cfif structKeyExists(local.func, "taffy_docs_hide") OR structKeyExists(local.func, "taffy:docs:hide") OR structKeyExists(local.func, "taffy_dashboard_hide") OR structKeyExists(local.func, "taffy:dashboard:hide")>
+											<cfscript>continue;</cfscript>
+										</cfif>
+										<!--- exclude methods that are not exposed as REST verbs --->
+										<cfif listFindNoCase('get,post,put,delete,patch',local.func.name) OR structKeyExists(local.func,'taffy_verb') OR structKeyExists(local.func,'taffy:verb')>
+											<div class="col-md-12"><strong>#local.func.name#</strong></div>
+											<cfif structKeyExists(local.func, "hint")>
+												<div class="col-md-12 doc">#local.func.hint#</div>
+											</cfif>
+											<cfloop from="1" to="#arrayLen(local.func.parameters)#" index="local.p">
+												<cfset local.param = local.func.parameters[local.p] />
+												<cfif structKeyExists(local.param, "taffy_docs_hide") OR structKeyExists(local.param, "taffy:docs:hide") OR structKeyExists(local.param, "taffy_dashboard_hide") OR structKeyExists(local.param, "taffy:dashboard:hide")>
+													<cfscript>continue;</cfscript>
+												</cfif>
+												<div class="row">
+													<div class="col-md-11 col-md-offset-1">
+														<cfif not structKeyExists(local.param, 'required') or not local.param.required>
+															optional
+														<cfelse>
+															required
+														</cfif>
+														<cfif structKeyExists(local.param, "type")>
+															#local.param.type#
+														</cfif>
+														<strong>#local.param.name#</strong>
+														<cfif structKeyExists(local.param, "default")>
+															<cfif local.param.default eq "">
+																(default: "")
+															<cfelse>
+																(default: #local.param.default#)
+															</cfif>
+														<cfelse>
+															<!--- no default value --->
+														</cfif>
+														<cfif structKeyExists(local.param, "hint")>
+															<br/><span class="doc">#local.param.hint#</span>
+														</cfif>
+													</div>
+												</div>
+											</cfloop>
 										</cfif>
 									</cfloop>
-									<code style="float:right; margin-top: -15px; display: inline-block;">#local.currentResource.srcUri#</code>
-								</h4>
-							</div>
-							<div class="panel-collapse collapse" id="#local.resourceHTTPID#">
-								<div class="panel-body resourceWrapper">
-									<div class="col-md-8 runner">
-										<div class="well resource" data-uri="#local.currentResource.srcUri#" data-bean-name="#local.resourceHTTPID#">
-											<button class="btn btn-primary submitRequest">Send</button>
-											<button class="btn btn-success resetRequest">Reset</button>
-											<button class="btn btn-default showDocs">Show Docs</button>
-											<select class="form-control input-sm reqMethod">
-												<cfloop list="GET,POST,PUT,PATCH,DELETE" index="local.verb">
-													<cfif structKeyExists(local.currentResource.methods, local.verb)>
-														<option value="#local.verb#">#local.verb#</option>
-													</cfif>
-												</cfloop>
-												<cfif application._taffy.settings.allowCrossDomain NEQ 'false'>
-													<option value="OPTIONS">OPTIONS</option>
-												</cfif>
-											</select>
-											<input type="text" class="resourceUri form-control" value="#local.currentResource.srcUri#" onclick="this.select()" />
-											<div class="toggles">
-												<a class="expander" data-target="##qp_#local.resourceHTTPID#">+Query Params</a>
-												&nbsp;<a class="expander" data-target="##accept_#local.resourceHTTPID#">+Accept</a>
-												&nbsp;<a class="expander" data-target="##head_#local.resourceHTTPID#">+Headers</a>
-												&nbsp;<a class="expander" data-target="##auth_#local.resourceHTTPID#">+Basic Auth</a>
-											</div>
-
-											<div class="queryParams expandable" id="qp_#local.resourceHTTPID#">
-												<h4>Query String Parameters: <span class="text-muted">(optional)</span></h4>
-												<div class="qparam row form-group">
-													<div class="col-md-4">
-														<input class="form-control input-small paramName" />
-													</div>
-													<div class="col-md-1 micro">=</div>
-													<div class="col-md-4">
-														<input class="form-control input-small paramValue" />
-													</div>
-													<div class="col-md-2">
-														<button class="btn addParam" tabindex="-1">+</button>
-													</div>
-												</div>
-											</div>
-
-											<div class="expandable" id="accept_#local.resourceHTTPID#">
-												<h4>Accept:</h4>
-												<select class="form-control input-sm reqFormat">
-													<cfloop list="#structKeyList(application._taffy.settings.mimeTypes)#" index="local.mime">
-														<option value="#local.mime#"
-															<cfif application._taffy.settings.defaultMime eq application._taffy.settings.mimeTypes[local.mime]>selected="selected"</cfif>
-														>#application._taffy.settings.mimeTypes[local.mime]#</option>
-													</cfloop>
-												</select>
-											</div>
-
-											<cfif arrayLen(local.currentResource.tokens) gt 0>
-												<div class="reqTokens">
-													<h4>URI Tokens: <span class="text-muted">(required)</span></h4>
-													<div class='tokenErrors'></div>
-													<form class="form-horizontal" onsubmit="return false;">
-														<cfloop from="1" to="#arrayLen(local.currentResource.tokens)#" index="local.token">
-															<div class="form-group row">
-																<div class="col-md-3">
-																	<label class="control-label" for="token_#local.resourceHTTPID#_#local.currentResource.tokens[local.token]#">#local.currentResource.tokens[local.token]#:</label>
-																</div>
-																<div class="col-md-6">
-																	<input id="token_#local.resourceHTTPID#_#local.currentResource.tokens[local.token]#" name="#local.currentResource.tokens[local.token]#" type="text" class="form-control input-sm" />
-																</div>
-															</div>
-														</cfloop>
-													</form>
-												</div>
-											</cfif>
-
-											<div class="reqHeaders expandable" id="head_#local.resourceHTTPID#">
-												<h4>Request Headers:</h4>
-												<textarea
-													rows="#listLen(structKeyList(application._taffy.settings.dashboardHeaders, '|'), '|')+1#"
-													class="form-control input-sm requestHeaders"
-													placeholder="X-MY-HEADER: VALUE"
-													><cfloop list="#structKeyList(application._taffy.settings.dashboardHeaders, '|')#" delimiters="|" index="k">#k#: #application._taffy.settings.dashboardHeaders[k]##chr(13)##chr(10)#</cfloop></textarea>
-											</div>
-
-											<div class="expandable" id="auth_#local.resourceHTTPID#">
-												<h4>Basic Auth:</h4>
-												<div class="basicAuth row">
-													<div class="col-md-6"><input type="text" name="username" class="form-control" placeholder="Username" value="" /></div>
-													<div class="col-md-6"><input type="password" name="password" class="form-control" placeholder="Password" value="" /></div>
-												</div>
-											</div>
-
-											<div class="reqBody">
-												<h4>Request Body:</h4>
-												<textarea id="#local.resourceHTTPID#_RequestBody" class="form-control input-sm" rows="5"></textarea>
-												<cfif structKeyExists(local.md,"functions")>
-													<cfset local.functions = local.md.functions />
-												<cfelse>
-													<cfset local.functions = arrayNew(1) />
-												</cfif>
-
-												<!--- only save body templates for POST & PUT --->
-												<cfloop from="1" to="#arrayLen(local.functions)#" index="local.f">
-													<cfif local.functions[local.f].name eq "POST" or local.functions[local.f].name eq "PUT" or local.functions[local.f].name eq "PATCH">
-														<cfset local.args = {} />
-														<!--- get a list of all function arguments --->
-														<cfloop from="1" to="#arrayLen(local.functions[local.f].parameters)#" index="local.parm">
-															<cfset local.paramAttributes = local.functions[local.f].parameters[local.parm]>
-															<cfif structKeyExists(local.paramAttributes, "taffy_docs_hide") OR structKeyExists(local.paramAttributes, "taffy:docs:hide") OR structKeyExists(local.paramAttributes, "taffy_dashboard_hide") OR structKeyExists(local.paramAttributes, "taffy:dashboard:hide")>
-																<cfscript>continue;</cfscript>
-															</cfif>
-															<cfif not structKeyExists(local.paramAttributes,"type")>
-																<cfset local.args[local.paramAttributes.name] = '' />
-															<cfelseif local.paramAttributes.type eq 'struct'>
-																<cfset local.args[local.paramAttributes.name] = structNew() />
-															<cfelseif local.paramAttributes.type eq 'array'>
-																<cfset local.args[local.paramAttributes.name] = arrayNew(1) />
-															<cfelseif local.paramAttributes.type eq 'numeric'>
-																<cfset local.args[local.paramAttributes.name] = 0 />
-															<cfelseif local.paramAttributes.type eq 'boolean'>
-																<cfset local.args[local.paramAttributes.name] = true />
-															<cfelse>
-																<cfset local.args[local.paramAttributes.name] = '' />
-															</cfif>
-														</cfloop>
-														<!--- omit uri tokens --->
-														<cfloop from="1" to="#arrayLen(local.currentResource.tokens)#" index="local.token">
-															<cfset structDelete(local.args, local.currentResource.tokens[local.token]) />
-														</cfloop>
-														<!--- save to page JS for runtime reference --->
-														<script>
-															taffy.resources['#local.resourceHTTPID#'] = taffy.resources['#local.resourceHTTPID#'] || {};
-															taffy.resources['#local.resourceHTTPID#']['#lcase(local.functions[local.f].name)#'] = #serializeJson(local.args)#;
-														</script>
-													</cfif>
-												</cfloop>
-											</div>
-											<div class="progress progress-striped active">
-												<div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-													<span class="sr-only">Loading...</span>
-												</div>
-											</div>
-											<div class="response">
-												<hr />
-												<h4>Response:</h4>
-												<div class="responseHeaders"></div>
-												<p class="responseTime"></p>
-												<p class="label label-default responseStatus"></p>
-												<pre><code class="responseBody"></code></pre>
-											</div>
-										</div><!-- /well (resource) -->
-									</div><!-- /col-md-8 -->
-									<div class="col-md-4 docs">
-										<div class="row"><div class="col-md-12"><button class="btn btn-default hideDocs">Hide Docs</button></div></div>
-										<strong><cfif structKeyExists(local.md, "taffy:docs:name")>
-											#lcase(local.md['taffy:docs:name'])#
-										<cfelseif structKeyExists(local.md, "taffy_docs_name")>
-											#lcase(local.md['taffy_docs_name'])#
-										<cfelse>
-											#lcase(local.currentResource.beanName)#
-										</cfif></strong><br />
-										<cfset local.metadata = getMetaData(application._taffy.factory.getBean(local.currentResource.beanName)) />
-										<cfset local.docData = getHintsFromMetadata(local.metadata) />
-										<cfif structKeyExists(local.docData, 'hint')><div class="doc">#local.docData.hint#</div><hr/></cfif>
-										<cfset local.found = { get=false, post=false, put=false, patch=false, delete=false } />
-										<cfloop from="1" to="#arrayLen(local.docData.functions)#" index="local.f">
-											<cfset local.func = local.docData.functions[local.f] />
-											<cfset local.found[local.func.name] = true />
-											<!--- skip methods that are hidden --->
-											<cfif structKeyExists(local.func, "taffy_docs_hide") OR structKeyExists(local.func, "taffy:docs:hide") OR structKeyExists(local.func, "taffy_dashboard_hide") OR structKeyExists(local.func, "taffy:dashboard:hide")>
-												<cfscript>continue;</cfscript>
-											</cfif>
-											<!--- exclude methods that are not exposed as REST verbs --->
-											<cfif listFindNoCase('get,post,put,delete,patch',local.func.name) OR structKeyExists(local.func,'taffy_verb') OR structKeyExists(local.func,'taffy:verb')>
-	 											<div class="col-md-12"><strong>#local.func.name#</strong></div>
-												<cfif structKeyExists(local.func, "hint")>
-													<div class="col-md-12 doc">#local.func.hint#</div>
-												</cfif>
-												<cfloop from="1" to="#arrayLen(local.func.parameters)#" index="local.p">
-													<cfset local.param = local.func.parameters[local.p] />
-													<cfif structKeyExists(local.param, "taffy_docs_hide") OR structKeyExists(local.param, "taffy:docs:hide") OR structKeyExists(local.param, "taffy_dashboard_hide") OR structKeyExists(local.param, "taffy:dashboard:hide")>
-														<cfscript>continue;</cfscript>
-													</cfif>
-													<div class="row">
-														<div class="col-md-11 col-md-offset-1">
-															<cfif not structKeyExists(local.param, 'required') or not local.param.required>
-																optional
-															<cfelse>
-																required
-															</cfif>
-															<cfif structKeyExists(local.param, "type")>
-																#local.param.type#
-															</cfif>
-															<strong>#local.param.name#</strong>
-															<cfif structKeyExists(local.param, "default")>
-																<cfif local.param.default eq "">
-																	(default: "")
-																<cfelse>
-																	(default: #local.param.default#)
-																</cfif>
-															<cfelse>
-																<!--- no default value --->
-															</cfif>
-															<cfif structKeyExists(local.param, "hint")>
-																<br/><span class="doc">#local.param.hint#</span>
-															</cfif>
-														</div>
-													</div>
-												</cfloop>
-											</cfif>
-										</cfloop>
-									</div><!-- /col-md-4 (docs) -->
-								</div>
+								</div><!-- /col-md-4 (docs) -->
 							</div>
 						</div>
-					</cfloop>
-				</cfoutput>
+					</div>
+				</cfloop>
 			</div><!-- /panel-group -->
 			<br />
 			<cfif arrayLen(application._taffy.uriMatchOrder) eq 0>
@@ -445,7 +444,7 @@
 					<div class="panel-body">
 						<p>
 							It looks like you don't have any resources defined. Get started by creating the folder
-							<code><cfoutput>#guessResourcesFullPath()#</cfoutput></code>, in which you should place your
+							<code>#guessResourcesFullPath()#</code>, in which you should place your
 							Resource CFC's.
 						</p>
 						<p>
@@ -463,11 +462,11 @@
 			<cfif application._taffy.settings.reloadKey eq "reload" and application._taffy.settings.reloadPassword eq "true">
 				<div class="alert alert-warning">
 					<strong>Warning:</strong> Your reload key and password are using the framework default settings.
-					It's advised that you <a href="<cfoutput>#getDocUrl('reloadKey')#</cfoutput>">change these in production</a>.
+					It's advised that you <a href="#getDocUrl('reloadKey')#">change these in production</a>.
 				</div>
 			</cfif>
 			<div class="alert alert-info">Resources are listed in matching order. From top to bottom, the first URI to match the request is used.</div>
-		</div><!-- /#resources -->
+		</div><!-- /##resources -->
 
 	</div><!-- /container -->
 
@@ -480,10 +479,10 @@
 		$(function(){
 			hljs.initHighlighting();
 
-			var baseurl = '<cfoutput>#cgi.script_name#?dashboard</cfoutput>';
-			$("#reload").click(function(){
-				var reloadUrl = baseurl + '<cfoutput>&#application._taffy.settings.reloadKey#=#application._taffy.settings.reloadPassword#</cfoutput>';
-				var btn = $("#reload");
+			var baseurl = '#cgi.script_name#?dashboard';
+			$("##reload").click(function(){
+				var reloadUrl = baseurl + '&#application._taffy.settings.reloadKey#=#application._taffy.settings.reloadPassword#';
+				var btn = $("##reload");
 				btn.html('Reloading...').attr('disabled','disabled');
 				$.ajax({
 					url: reloadUrl
@@ -491,19 +490,19 @@
 					,cache: false
 				}).done(function(data){
 					//notify reload success
-					$("#alerts").append('<div class="alert alert-success" id="reloadSuccess">API Cache Successfully Reloaded. Refresh to see changes.</div>');
+					$("##alerts").append('<div class="alert alert-success" id="reloadSuccess">API Cache Successfully Reloaded. Refresh to see changes.</div>');
 					btn.removeAttr('disabled').html('Reload API Cache');
 					setTimeout(function(){
-						$("#reloadSuccess").fadeOut('fast', function(){
+						$("##reloadSuccess").fadeOut('fast', function(){
 							$(this).remove();
 						});
 					}, 2000);
 				}).fail(function(jqxhr, status, error){
 					//notify reload fail
-					$("#alerts").append('<div class="alert alert-danger" id="reloadFail">API Cache Reload Failed!</div>');
+					$("##alerts").append('<div class="alert alert-danger" id="reloadFail">API Cache Reload Failed!</div>');
 					btn.removeAttr('disabled').html('Reload API Cache');
 					setTimeout(function(){
-						$("#reloadFail").fadeOut('fast', function(){
+						$("##reloadFail").fadeOut('fast', function(){
 							$(this).remove();
 						});
 					}, 2000);
@@ -528,7 +527,7 @@
 		});
 		function submitRequest( verb, resource, headers, body, callback ){
 			var url = window.location.protocol + '//' +  window.location.host;
-			var endpointURLParam = '<cfoutput>#jsStringFormat(application._taffy.settings.endpointURLParam)#</cfoutput>';
+			var endpointURLParam = '#jsStringFormat(application._taffy.settings.endpointURLParam)#';
 			var endpoint = resource.split('?')[0];
 			var args = '';
 			var dType = null;
@@ -541,13 +540,13 @@
 					<cfset local.csrfCookieName = jsStringFormat(application._taffy.settings.csrfToken.cookieName)>
 					<cfset local.csrfHeaderName = jsStringFormat(application._taffy.settings.csrfToken.headerName)>
 				</cfif>
-				var csrfCookie = getCookie('<cfoutput>#local.csrfCookieName#</cfoutput>');
+				var csrfCookie = getCookie('#local.csrfCookieName#');
 				if (csrfCookie) {
-					headers['<cfoutput>#local.csrfHeaderName#</cfoutput>'] = csrfCookie;
+					headers['#local.csrfHeaderName#'] = csrfCookie;
 				}
 			</cfif>
 
-			url += '<cfoutput>#cgi.SCRIPT_NAME#</cfoutput>' + '?' + endpointURLParam + '=' + encodeURIComponent(endpoint);
+			url += '#cgi.SCRIPT_NAME#' + '?' + endpointURLParam + '=' + encodeURIComponent(endpoint);
 			if( resource.indexOf('?') && resource.split('?')[1] ){
 				url += '&' + resource.split('?')[1];
 			}
@@ -617,6 +616,7 @@
 	</script>
 </body>
 </html>
+</cfoutput>
 
 <cffunction name="getDocUrl">
 	<cfargument name="item" />
